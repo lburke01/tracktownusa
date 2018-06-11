@@ -1,5 +1,3 @@
-import javafx.scene.control.RadioButton;
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -12,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 public class Display extends JFrame
 {
+	Font font = new Font("ComicSans", Font.PLAIN, 24);
     ButtonGroup groupAt = new ButtonGroup();
     ButtonGroup groupAb = new ButtonGroup();
     Player active;
@@ -109,23 +108,16 @@ public class Display extends JFrame
         Environment demoEnv = new Environment(ulfeen, allPlayers, allEnemies);
         demoEnv.addActor(ulfeen);
         Display d = new Display(ulfeen, demoEnv);
-        System.out.println(demoEnv.hasRan());
         while(ulfeen.getHealth() > 0 && dragon.getHealth() > 0)
         {
-            System.out.println(demoEnv.hasRan());
             d.run();
-            System.out.println(demoEnv.hasRan());
             dragon.act(demoEnv);
-            int l = dragon.getHealth();
-            while(!demoEnv.hasRan() && dragon.getHealth() > 0)
+            int i = dragon.getHealth();
+            while(!canMoveOn)
             {
-                if(demoEnv.isButton || dragon.getHealth() < l)
-                    break;
+            	if(dragon.getHealth() < i)
+            		break;
             }
-            demoEnv.isButton = false;
-            System.out.println(demoEnv.hasRan());
-            System.out.println("x");
-            System.out.println(demoEnv.hasRan());
         }
         if(ulfeen.getHealth() <= 0)
         {
@@ -138,7 +130,11 @@ public class Display extends JFrame
 }
 class Canvas extends JPanel
 {
-    BufferedImage image1;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	BufferedImage image1;
     BufferedImage ulfeen;
     ArrayList<Actor> playerStats;
     ArrayList<Actor> enemyStats;
@@ -168,14 +164,19 @@ class Canvas extends JPanel
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
         g.setColor(Color.red);
+        g.setFont(font);
         int y = 800;
-
-            g.drawString(player.getName() + ": Health: " + Integer.toString(player.getHealth()) + "/" + Integer.toString(player.getMaxHealth()) + "| Mana: " + Integer.toString(player.currentMana) + "/" + Integer.toString(player.maxMana),1000, y );
+        	g.drawString(player.getName() + ": ", 1075, y);
+        	g.setColor(Color.white);
+            g.drawString("Health: " + Integer.toString(player.getHealth()) + "/" + Integer.toString(player.getMaxHealth()) + " | Mana: " + Integer.toString(player.currentMana) + "/" + Integer.toString(player.maxMana),1175, y );
 
         y = 800;
         for(Actor a: enemyStats)
         {
-            g.drawString(a.getName() + ": Health: " + Integer.toString(a.getHealth()) + " / " + Integer.toString(a.getMaxHealth()) + "| Mana: " + Integer.toString(a.currentMana) + "/" + Integer.toString(a.maxMana),50, y);
+        	g.setColor(Color.red);
+        	g.drawString(a.getName() + ": ", 50, y);
+        	g.setColor(Color.white);
+            g.drawString("Health: " + Integer.toString(a.getHealth()) + " / " + Integer.toString(a.getMaxHealth()) + " | Mana: " + Integer.toString(a.currentMana) + "/" + Integer.toString(a.maxMana),150, y);
         }
         g.drawImage(image1, 50,100,null);
         g.drawImage(ulfeen, 1000,100,null);
@@ -186,4 +187,3 @@ class Canvas extends JPanel
 
 }
 }
-
